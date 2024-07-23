@@ -1,4 +1,4 @@
-import{cart}from'../data/cart.js';
+import{cart,addToCart}from'../data/cart.js';
 import{products}from'../data/products.js';
 let productsHTML='';
 
@@ -59,45 +59,37 @@ products.forEach((product)=>{
 document.querySelector('.js-products-grid')
   .innerHTML=productsHTML;
 let timeoutID;
+
+function addedMessage(productId){
+  document.querySelector(`.not-added-notification-${productId}`)
+    .classList.add('added-notification');
+
+  clearTimeout(timeoutID);
+  timeoutID=setTimeout(()=>{
+    document.querySelector(`.not-added-notification-${productId}`)
+      .classList.remove('added-notification');
+  },2000)
+}
+
+function updateCartQuantity(){
+  let cartQuantity=0;
+      cart.forEach((cartItem)=>{
+        cartQuantity+=cartItem.quantity;
+      });
+      //console.log(cartQuantity)
+
+      document.querySelector('.js-cart-quantity').innerText=cartQuantity;
+      //console.log(cart)
+}
+
 document.querySelectorAll('.js-add-to-cart')
   .forEach((button)=>{
     button.addEventListener('click',()=>{
       const {productId}=button.dataset;
       const quantity=Number(document.querySelector(`.js-quantity-selector-${productId}`).value)
       //console.log(productId)
-      
-      document.querySelector(`.not-added-notification-${productId}`)
-        .classList.add('added-notification');
-
-      clearTimeout(timeoutID);
-      timeoutID=setTimeout(()=>{
-        document.querySelector(`.not-added-notification-${productId}`)
-          .classList.remove('added-notification');
-      },2000)
-
-      let matchingItem;
-      cart.forEach((item)=>{
-        if(productId===item.productId){
-          matchingItem=item;
-        }
-      });
-
-      if(matchingItem){
-        matchingItem.quantity+=quantity;
-      }else{
-        cart.push({
-          productId,
-          quantity
-        })
-      }
-
-      let cartQuantity=0;
-      cart.forEach((item)=>{
-        cartQuantity+=item.quantity;
-      });
-      //console.log(cartQuantity)
-
-      document.querySelector('.js-cart-quantity').innerText=cartQuantity;
-      //console.log(cart)
+      addToCart(productId,quantity);
+      addedMessage(productId);
+      updateCartQuantity();
     });
   });
