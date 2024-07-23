@@ -1,3 +1,4 @@
+import{cart}from'../data/cart.js';
 let productsHTML='';
 
 products.forEach((product)=>{
@@ -41,7 +42,7 @@ products.forEach((product)=>{
 
       <div class="product-spacer"></div>
 
-      <div class="added-to-cart">
+      <div class="added-to-cart not-added-notification-${product.id}">
         <img src="images/icons/checkmark.png">
         Added
       </div>
@@ -56,13 +57,22 @@ products.forEach((product)=>{
 
 document.querySelector('.js-products-grid')
   .innerHTML=productsHTML;
-
+let timeoutID;
 document.querySelectorAll('.js-add-to-cart')
   .forEach((button)=>{
     button.addEventListener('click',()=>{
-      const productId=button.dataset.productId;
-      const selectorId=document.querySelector(`.js-quantity-selector-${productId}`).value
-      //console.log(selectorId)
+      const {productId}=button.dataset;
+      const quantity=Number(document.querySelector(`.js-quantity-selector-${productId}`).value)
+      //console.log(productId)
+      
+      document.querySelector(`.not-added-notification-${productId}`)
+        .classList.add('added-notification');
+
+      clearTimeout(timeoutID);
+      timeoutID=setTimeout(()=>{
+        document.querySelector(`.not-added-notification-${productId}`)
+          .classList.remove('added-notification');
+      },2000)
 
       let matchingItem;
       cart.forEach((item)=>{
@@ -72,11 +82,11 @@ document.querySelectorAll('.js-add-to-cart')
       });
 
       if(matchingItem){
-        matchingItem.quantity+=Number(selectorId);
+        matchingItem.quantity+=quantity;
       }else{
         cart.push({
           productId,
-          quantity:Number(selectorId)
+          quantity
         })
       }
 
