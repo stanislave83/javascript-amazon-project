@@ -15,7 +15,7 @@ import{renderCheckoutHeader}from'./checkoutHeader.js'
 
 export function renderOrderSummary(){
 
-  let cartSummoryHTML='';
+  let cartSummaryHTML='';
   cart.forEach((cartItem)=>{
     const {productId}=cartItem;
 
@@ -27,8 +27,8 @@ export function renderOrderSummary(){
 
     const dateString=calculateDeliveryDate(deliveryOption);
 
-    cartSummoryHTML+=`
-      <div class="cart-item-container 
+    cartSummaryHTML+=`
+      <div class="cart-item-container js-cart-item-container
         js-cart-item-container-${matchingProduct.id}">
         <div class="delivery-date">
           Delivery date: ${dateString}
@@ -45,7 +45,7 @@ export function renderOrderSummary(){
             <div class="product-price">
               $${formatCurrency(matchingProduct.priceCents)}
             </div>
-            <div class="product-quantity">
+            <div class="product-quantity js-product-quantity-${matchingProduct.id}">
               <span>
                 Quantity: <span class="quantity-label js-quantity-label-${matchingProduct.id}">${cartItem.quantity}</span>
               </span>
@@ -54,7 +54,7 @@ export function renderOrderSummary(){
               </span>
               <input class="quantity-input js-quantity-input-${matchingProduct.id}" data-product-id="${matchingProduct.id}">
               <span class="save-quantity-link link-primary" data-product-id="${matchingProduct.id}">Save</span>
-              <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
+              <span class="delete-quantity-link link-primary js-delete-link js-delete-link-${matchingProduct.id}" data-product-id="${matchingProduct.id}">
                 Delete
               </span>
             </div>
@@ -101,7 +101,7 @@ export function renderOrderSummary(){
     return html;
   }
 
-  document.querySelector('.js-order-summory').innerHTML=cartSummoryHTML;
+  document.querySelector('.js-order-summary').innerHTML=cartSummaryHTML;
 
   document.querySelectorAll('.js-delete-link')
     .forEach((link)=>{
