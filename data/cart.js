@@ -10,6 +10,7 @@ if(!cart){
     quantity:1,
     deliveryOptionId:'2'
   }];
+  console.log(1)
 }
 
 function saveToStorage(){

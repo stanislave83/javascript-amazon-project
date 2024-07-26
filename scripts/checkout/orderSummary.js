@@ -3,8 +3,9 @@ import{products,getProducts}from'../../data/products.js'
 import formatCurrency from'../utils/money.js'
 // import{hello}from'https://unpkg.com/supersimpledev@1.0.1/hello.esm.js'
 import dayjs from'https://unpkg.com/dayjs@1.11.10/esm/index.js'
-import{deliveryOptions,getDeliveryOption}from'../../data/deliveryOptions.js'
+import{deliveryOptions,getDeliveryOption,calculateDeliveryDate}from'../../data/deliveryOptions.js'
 import{renderPaymentSummary}from'./paymentSummary.js'
+import{renderCheckoutHeader}from'./checkoutHeader.js'
 
 // hello()
 // const today=dayjs()
@@ -24,9 +25,7 @@ export function renderOrderSummary(){
 
     const deliveryOption=getDeliveryOption(deliveryOptionId);
 
-    const today=dayjs();
-    const deliveryDate=today.add(deliveryOption.deliveryDays,'days')
-    const dateString=deliveryDate.format('dddd, MMMM D')
+    const dateString=calculateDeliveryDate(deliveryOption);
 
     cartSummoryHTML+=`
       <div class="cart-item-container 
@@ -75,9 +74,7 @@ export function renderOrderSummary(){
   function deliveryOptionsHTML(matchingProduct,cartItem){
     let html='';
     deliveryOptions.forEach((deliveryOption)=>{
-      const today=dayjs();
-      const deliveryDate=today.add(deliveryOption.deliveryDays,'days')
-      const dateString=deliveryDate.format('dddd, MMMM D')
+      const dateString=calculateDeliveryDate(deliveryOption);
       const priceString=deliveryOption.priceCents===0
         ?'FREE'
         :`$${formatCurrency(deliveryOption.priceCents)} -`
@@ -112,8 +109,8 @@ export function renderOrderSummary(){
         const {productId}=link.dataset;
         removeFromCart(productId);
 
-        const container=document.querySelector(`.js-cart-item-container-${productId}`)
-        container.remove();
+        renderCheckoutHeader();
+        renderOrderSummary();
         updateCartQuantity();
         renderPaymentSummary();
       })
@@ -136,10 +133,10 @@ export function renderOrderSummary(){
         const inputQuantity=document.querySelector(`.js-quantity-input-${productId}`);
         let newQuantity=Number(inputQuantity.value)
         
-        document.querySelector(`.js-quantity-label-${productId}`)
-          .innerText=newQuantity
         updateQuantity(productId,newQuantity)
+        renderCheckoutHeader();
         updateCartQuantity();
+        renderOrderSummary();
         renderPaymentSummary();
         if(updateQuantity(productId,newQuantity)===-1){
           return;
@@ -159,10 +156,10 @@ export function renderOrderSummary(){
           const inputQuantity=document.querySelector(`.js-quantity-input-${productId}`);
           let newQuantity=Number(inputQuantity.value)
           
-          document.querySelector(`.js-quantity-label-${productId}`)
-            .innerText=newQuantity
           updateQuantity(productId,newQuantity)
+          renderCheckoutHeader();
           updateCartQuantity();
+          renderOrderSummary();
           renderPaymentSummary();
           if(updateQuantity(productId,newQuantity)===-1){
             return;
@@ -178,6 +175,7 @@ export function renderOrderSummary(){
   updateCartQuantity();
   function updateCartQuantity(){
     const cartQuantity=calculateCartQuantity();
+    renderCheckoutHeader();
     document.querySelector('.js-cart-quantity')  
       .innerHTML=`${cartQuantity} items`;
   }

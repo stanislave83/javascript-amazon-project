@@ -83,7 +83,7 @@ function addedMessage(productId){
   timeoutID=setTimeout(()=>{
     document.querySelector(`.not-added-notification-${productId}`)
       .classList.remove('added-notification');
-  },2000)
+  },200)
 }
 
 
