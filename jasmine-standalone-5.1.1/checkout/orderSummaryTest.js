@@ -1,6 +1,7 @@
 import{renderOrderSummary}from'../../scripts/checkout/orderSummary.js';
 import { cart } from '../../data/cart-class.js';
 import{renderPaymentSummary}from'../../scripts/checkout/paymentSummary.js';
+import { loadProducts } from '../../data/products.js';
 
 describe('test suite: renderOrderSummary',()=>{
   const productId1='e43638ce-6aa0-4b85-b27f-e1d07eb678c6';
@@ -8,6 +9,12 @@ describe('test suite: renderOrderSummary',()=>{
   //const deliveryOptionId1='1';
   //const deliveryOptionId2='2';
   const deliveryOptionId3='3';
+
+  beforeAll((done)=>{
+    loadProducts(()=>{
+      done();
+    });
+  });
 
   beforeEach(()=>{
     spyOn(localStorage,'setItem')
