@@ -3,6 +3,7 @@ import{getProducts}from'../../data/products.js'
 import{getDeliveryOption}from'../../data/deliveryOptions.js'
 import formatCurrency from '../utils/money.js';
 import { addOrder } from '../../data/orders.js';
+import { resetTheCart } from '../orders.js';
 
 export function renderPaymentSummary(){
   let productPriceCents=0;
@@ -73,7 +74,9 @@ export function renderPaymentSummary(){
         });
   
         const order = await response.json();
+        // console.log(order)
         addOrder(order);
+        resetTheCart();
 
       }catch(error){
         console.log('Unexpected error. Try again later.')

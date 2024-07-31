@@ -1,12 +1,25 @@
 import { renderCheckoutHeader } from './checkout/checkoutHeader.js';
 import { renderOrderSummary } from './checkout/orderSummary.js';
 import { renderPaymentSummary } from './checkout/paymentSummary.js';
-import { loadProducts,loadProductsFetch } from '../data/products.js';
-import { loadCart } from '../data/cart-class.js';
+import { loadProductsFetch } from '../data/products.js';
+import { loadCartFetch } from '../data/cart-class.js';
 // import '../data/cart-class.js';
 // import '../data/car.js';
 // import '../data/backend-practice.js';
 
+async function loadPage(){
+  await Promise.all([
+    loadProductsFetch(),
+    loadCartFetch()
+  ]);
+  renderCheckoutHeader();
+  renderOrderSummary();
+  renderPaymentSummary();
+}
+
+loadPage();
+
+/*
 async function loadPage(){
   try{
     // throw 'error1';
@@ -14,7 +27,7 @@ async function loadPage(){
 
     const value = await new Promise((resolve,reject)=>{
       // throw 'error2';
-      loadCart(()=>{
+      loadCartFetch(()=>{
         // reject('error3')
         resolve('value3');
       });
@@ -28,12 +41,14 @@ async function loadPage(){
   renderPaymentSummary();
 }
 loadPage();
+*/
+
 /*
 Promise.all([
   loadProductsFetch(),
   
 
-]).then(( values)=>{
+]).then((values)=>{
   console.log(values)
   renderCheckoutHeader();
   renderOrderSummary();

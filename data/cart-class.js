@@ -113,6 +113,11 @@ class Cart {
   }
 };
 
+export async function loadCartFetch(){
+  const response = await(await fetch('https://supersimplebackend.dev/cart')).text();
+  console.log(response);
+}
+
 export function loadCart(fun){
   const xhr = new XMLHttpRequest();
   
@@ -127,7 +132,7 @@ export function loadCart(fun){
 
 
 export const cart = new Cart('cart-oop');
-const businessCart = new Cart('cart-business');
+// const businessCart = new Cart('cart-business');
 
 // console.log(cart);
 // console.log(businessCart);
